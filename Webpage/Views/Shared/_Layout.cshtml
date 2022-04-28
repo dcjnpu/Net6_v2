@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CxGitee_Net6</title>
+    <link rel="stylesheet" href="~/layui/css/layui.css" />
+    <link rel="stylesheet" href="~/css/myadmin.css" />
+    @await RenderSectionAsync("Css", required: false)
+    <script src="@Url.Content("~/lib/jquery/dist/jquery.js")"></script>
+    <script src="@Url.Content("~/layui/layui.js")"></script>
+    <script src="@Url.Content("~/layer/layer.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/js/XCommon6.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/js/EditFrom.js")" asp-append-version="true"></script>
+    @await RenderSectionAsync("Js", required: false)
+
+</head>
+<body>
+    @RenderBody()
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

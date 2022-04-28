@@ -1,0 +1,80 @@
+﻿@model BaseBLL.PT_ROLE
+@{
+    Layout = "_Layout";
+}
+<div class="layui-fluid">
+    <div class="layui-card ">
+        <div class="layui-card-header">角色权限(@Model.NAME)</div>
+        <div class="layui-card-body">
+            <div id="test1"></div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <div class="layui-btn-container">
+                        <button type="button" class="layui-btn layui-btn-normal" id="btn_sub">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+<script type="text/javascript">
+
+    $(function () {
+        $(".layui-btn").bind("click", function () { sub(); });
+    })
+
+    function sub() {
+        var checkData = inst1.getChecked('test1');
+        getCheckedIds(checkData);
+        var json = { id: @Model.ID, data: ids }
+        ids=[];
+        AjaxPost_Async("/Admin/RolePowerSave", json, function (rdata) {
+            if (rdata.id > 0) {
+                XAlert_S(rdata.msg, function () { loaddata(); });
+            }
+            else {
+                XAlert_F(rdata.msg);
+            }
+        })
+    }
+    var ids = [];
+    function getCheckedIds(data) {
+        if (!data || data.length < 1) return;
+
+        for (var i = 0; i < data.length; i++) {
+            getCheckedIds(data[i].children);
+            if (data[i].id == 0) continue;
+            ids.push(data[i].id);
+        }
+    }
+
+    var tree;
+    layui.use('tree', function () {
+        tree = layui.tree;
+        loaddata(0);
+    });
+
+    var _editform = "<div class='layui-form'><div class=\"layui-form-item\"><label class=\"layui-form-label\">唯一编码:</label><div class=\"layui-input-block\"><input type=\"text\" name=\"NAME\" autocomplete=\"off\"  class=\"layui-input\"></div></div>"
+                            + "<div class=\"layui-form-item\"><label class=\"layui-form-label\">名称:</label><div class=\"layui-input-block\"><input type=\"text\" name=\"EXPLAIN\" autocomplete=\"off\"  class=\"layui-input\"></div></div>"
+                            + "<div class=\"layui-form-item\"><label class=\"layui-form-label\">本级排序:</label><div class=\"layui-input-block\"><input type=\"text\" name=\"ORDERBY\" autocomplete=\"off\"  class=\"layui-input\"></div></div>"
+                            + "<div class=\"layui-form-item\"><label class=\"layui-form-label\">值:</label><div class=\"layui-input-block\"> <textarea name=\"VALUE\" class=\"layui-textarea\"></textarea></div></div></div>";
+
+    var menudata;
+    function loaddata() {
+       AjaxPost_Async("/admin/RolePowerGet", { id: @Model.ID }, function (rdata) {
+           if (rdata.id > 0) {
+                menudata = rdata.data;
+                inst1 = tree.render({
+                    elem: '#test1',
+                    data: menudata,
+                    //accordion: true,
+                    showCheckbox: true
+                });
+            }
+
+        })
+
+    }
+</script>
+}

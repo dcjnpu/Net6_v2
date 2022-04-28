@@ -1,0 +1,88 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Layout";
+}
+<style type="text/css">
+    .layui-edge, .layui-header, .layui-inline, .layui-main {
+        position: unset;
+    }
+</style>
+@section Js{
+
+}
+@section Css{
+<link rel="stylesheet" href="@Url.Content("~/css/login.css")" type="text/css" />
+}
+@section Scripts{
+<script type="text/javascript">
+    $(function () {
+        _reloadImg();
+        $("#btn_sublogin").on("click", function () { login(); })
+        $("#yzimg").on("click", function () { _reloadImg(); })
+
+        $("#user").bind("keyup", function (e) {
+            var ev = document.all ? window.event : e;
+            if (ev.keyCode == 13) { $("#pswd").focus(); }
+        })
+        $("#pswd").bind("keyup", function (e) {
+            var ev = document.all ? window.event : e;
+            if (ev.keyCode == 13) { $("#yzcode").focus(); }
+        })
+        $("#yzcode").bind("keyup", function (e) {
+            var ev = document.all ? window.event : e;
+            if (ev.keyCode == 13) { login(); }
+        })
+
+    })
+    function _reloadImg() {
+        var img = $('#yzimg');
+        _isloaded = true;
+        img.attr('src',"");
+        img.attr('src', '@Url.Action("captcha")?t='+Math.random());
+        img.show();
+    }
+    function login() {
+        var json = { action: "Login", u: $("#user").val(), p: $("#pswd").val(), c: $("#yzcode").val() };
+        AjaxPost_Async("@Url.Action("login")", json, function (rdata) {
+            if (rdata.statusCode ==200 ) {
+                location.href = "/home/index";
+            } else XAlert_F(rdata.message, function () {
+                if (rdata.statusCode == -201) { _reloadImg(); }
+            });
+        });
+    }
+</script>
+}
+<div class="login-main">
+    <div class="login-form">
+        <div class="header">
+            <div class="logo"></div>
+            <p>共享单车管理平台</p>
+        </div>
+        <div class="form-main">
+            <div class="form-item">
+                <i class="iconfont icon-RectangleCopy"></i>
+                <input type="text" id="user" class="login-input" maxlength="20" value="" placeholder="请输入用户名" autocomplete="off" />
+            </div>
+            <div class="form-item">
+                <i class="iconfont icon-RectangleCopy4"></i>
+                <input id="pswd" type="password" class="login-input" maxlength="20" value=""
+                       placeholder="请输入密码" autocomplete="off" />
+            </div>
+            <div class="verify-code-line">
+                <div class="form-item">
+                    <i class="iconfont icon-RectangleCopy1"></i>
+                    <input type="text" id="yzcode" class="login-input" maxlength="4" value=""
+                           placeholder="请输入验证码" autocomplete="off" />
+                </div>
+                <div class="verify-img">
+                    <img width="110" height="32" id="yzimg" style="cursor: pointer; display: none;" />
+                </div>
+            </div>
+            <input id="btn_sublogin" type="button" class="login-submit" value="登录" />
+        </div>
+
+    </div>
+</div>

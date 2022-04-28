@@ -1,0 +1,62 @@
+﻿@{
+    Layout = "_Layout";
+}
+@section Css{
+<style type="text/css">
+    .layui-icon-add-1:before {
+        content: "\e605";
+    }
+</style>
+}
+
+<div class="layui-fluid">
+    <div class="layui-card ">
+        <div class="layui-card-body">
+            <div id="test1"></div>
+        </div>
+    </div>
+</div>
+<input type="hidden" runat="server" id="hid_key" value="@ViewBag.Ckey" />
+
+@section Scripts{
+<script type="text/javascript">
+    $(function () {
+
+    })
+    var tree;
+    layui.use('tree', function () {
+        tree = layui.tree;
+        loaddata(0);
+    });
+    var menudata;
+    function loaddata(id) {
+        $.post("/admin/GetTree", { id: id, ckey: $("#hid_key").val() }, function (data) {
+            eval("rdata=" + data);
+            if (rdata.id > 0) {
+                menudata = rdata.data;
+                var inst1 = tree.render({
+                    elem: '#test1',
+                    data: menudata,
+                    edit: ['add'],
+
+                    customOperate: true,
+                    operate: function (obj) {
+                        var type = obj.type; //得到操作类型：add、edit、del
+                        var data = obj.data; //得到当前节点的数据
+                        var elem = obj.elem; //得到当前节点元素
+
+                        if ("add" == type) {
+                            selectnode(obj.data);
+                        }
+                    }
+                });
+            }
+        })
+    }
+
+    function selectnode(data) {
+        if (typeof (parent.afterselected) == "function") parent.afterselected(data);
+    }
+
+</script>
+}

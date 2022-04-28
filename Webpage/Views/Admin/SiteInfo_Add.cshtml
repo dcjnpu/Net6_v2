@@ -1,0 +1,60 @@
+﻿@model BaseBLL.PT_SITEINFO
+@using Cx.Data;
+
+@{
+    ViewData["Title"] = "SiteInfo_Add";
+}
+
+<div class="layui-fluid">
+    <div class="layui-card ">
+        @*<div class="layui-card-header">
+            编辑站点信息
+            </div>*@
+
+        <div class="layui-card-body layui-form" id="form1">
+            <div class="layui-form-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">唯一码</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="NAME" autocomplete="off" placeholder="请输入名称" class="layui-input" value="@Model?.NAME">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">说明</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="EXPLAIN" autocomplete="off" placeholder="请输入名称" class="layui-input" value="@Model?.EXPLAIN">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">值</label>
+                    <div class="layui-input-block">
+                        <textarea id="VALUE" autocomplete="off" placeholder="请输入名称" class="layui-textarea">@Model?.VALUE</textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <input type="hidden" id="ID" value="@Model?.ID.ToInt32(0)" />
+                        <button type="button" class="layui-btn layui-btn-normal" id="btn_sub">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+<script>
+    $(function(){
+        var editfrom1=new EditForm({
+          container:"#form1",
+          btn1:"#btn_sub",
+          url:"@Url.Action("SaveSiteInfo","Admin")"
+
+        });
+        layui.use('form', function () {
+            var form = layui.form
+        });
+    })
+
+</script>
+}

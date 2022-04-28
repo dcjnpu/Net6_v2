@@ -1,0 +1,159 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_Layout";
+}
+<div class="layui-fluid">
+    <div class="layui-card ">
+        <div class="layui-card-header">系统菜单</div>
+        <div class="layui-card-body">
+            <div id="test1"></div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+<script type="text/javascript">
+        var tree;
+        layui.use('tree', function () {
+            tree = layui.tree;
+            loaddata(0);
+        });
+
+        var _editform = "<div class='layui-form'>"
+        +"<div class='layui-form-item'><label class='layui-form-label'>父节点:</label><div class='layui-input-block'><input type='text' readonly='readonly' name='PARENTNAME' onclick='showselect()' autocomplete='off' class='layui-input'><input type='hidden' name='PARENTID' /></div></div>"
+        +"<div class='layui-form-item'><label class='layui-form-label'>唯一编码:</label><div class='layui-input-block'><input type='text' name='NAME' autocomplete='off' class='layui-input'></div></div>"
+        +"<div class='layui-form-item'><label class='layui-form-label'>名称:</label><div class='layui-input-block'><input type='text' name='EXPLAIN' autocomplete='off' class='layui-input'></div></div>"
+       +" <div class='layui-form-item'><label class='layui-form-label'>本级排序:</label><div class='layui-input-block'><input type='text' name='ORDERBY' autocomplete='off' class='layui-input'></div></div>"
+        +"<div class='layui-form-item'><label class='layui-form-label'>值:</label><div class='layui-input-block'> <textarea name='VALUE' class='layui-textarea'></textarea></div></div>"
+        +"<div class='layui-form-item'><label class='layui-form-label'>样式:</label><div class='layui-input-block'> <input type='text' name='CLASS' autocomplete='off' class='layui-input'></div></div>"
+    +"</div>";
+
+        var menudata;
+        function loaddata(id) {
+            $.post("/admin/getmenu", { id: id, ckey: "Http_AdminMenu" }, function (data) {
+                eval("rdata=" + data);
+                if (rdata.id > 0) {
+                    menudata = rdata.data;
+                    var inst1 = tree.render({
+                        elem: '#test1',
+                        data: menudata,
+                        edit: ['add', 'update', 'del'],
+
+                        customOperate: true,
+                        operate: function (obj) {
+                            var type = obj.type; //得到操作类型：add、edit、del
+                            var data = obj.data; //得到当前节点的数据
+                            var elem = obj.elem; //得到当前节点元素
+
+                            if ("add" == type) {
+                                layer.open({
+                                    type: 0,
+                                    title: "添加节点",
+                                    area: ["400px"],
+                                    content: _editform
+                                    , yes: function (index, layero) {
+                                        var json = {};
+                                        json.NAME = $(layero).find("input[name='NAME']").val();
+                                        json.EXPLAIN = $(layero).find("input[name='EXPLAIN']").val();
+                                        json.ORDERBY = $(layero).find("input[name='ORDERBY']").val();
+                                        json.VALUE = $(layero).find("textarea[name='VALUE']").val();
+                                        json.CLASS = $(layero).find("input[name='CLASS']").val();
+                                        json.PARENTID = $(layero).find("input[name='PARENTID']").val();// data.id;
+                                        save(json);
+                                    },
+                                    success: function (layero, index) {
+                                        $(layero).find("input[name='PARENTID']").val(data.data.ID);
+                                        $(layero).find("input[name='PARENTNAME']").val(data.data.EXPLAIN);
+                                        layer_page_layero = layero;
+                                    }
+                                });
+                                //return false;
+                            }
+
+                            if ("update" == type) {
+                                if (data.id == 0) { XAlert("根节点无法编辑"); return false; }
+                                layer.open({
+                                    type: 0,
+                                    title: "编辑节点",
+                                    //area: ["400px"],
+                                    content: _editform
+                                    , yes: function (index, layero) {
+                                        var json = data.data;
+                                        json.NAME = $(layero).find("input[name='NAME']").val();
+                                        json.EXPLAIN = $(layero).find("input[name='EXPLAIN']").val();
+                                        json.ORDERBY = $(layero).find("input[name='ORDERBY']").val();
+                                        json.VALUE = $(layero).find("textarea[name='VALUE']").val();
+                                        json.CLASS = $(layero).find("input[name='CLASS']").val();
+                                        json.PARENTID = $(layero).find("input[name='PARENTID']").val();
+                                        save(json);
+                                    },
+                                    success: function (layero, index) {
+                                        $(layero).find("input[name='NAME']").val(data.data.NAME);
+                                        $(layero).find("input[name='EXPLAIN']").val(data.data.EXPLAIN);
+                                        $(layero).find("input[name='ORDERBY']").val(data.data.ORDERBY);
+                                        $(layero).find("textarea[name='VALUE']").val(data.data.VALUE);
+                                        $(layero).find("input[name='CLASS']").val(data.data.CLASS);
+                                        $(layero).find("input[name='PARENTID']").val(data.data.PARENTID);
+                                        $(layero).find("input[name='PARENTNAME']").val(data.data.PARENTNAME);
+                                        //json.PARENTID = $(layero).find("input[name='PARENTID']").val();
+                                        layer_page_layero = layero;
+                                    }
+                                });
+                                //return true;
+                            }
+                            if ("del" == type) {
+                                del(data);
+
+                            }
+                            return false;
+                        }
+                    });
+                }
+
+            })
+
+        }
+
+        function del(data) {
+            AjaxPost_Async("/admin/delmenu", {  id: data.id }, function (rdata) {
+                if (rdata.id > 0) { XAlert_S(rdata.msg, function () { loaddata(data.data.PARENTID); }); }
+                else XAlert_F(rdata.msg);
+            })
+        }
+
+        function save(data) {
+            AjaxPost_Async("/admin/editmenu", data, function (rdata) {
+                if (rdata.id > 0) { XAlert_S("保存成功", function () { loaddata(rdata.id); }); }
+                else XAlert_F(rdata.msg);
+            })
+        }
+
+        var layer_page_index;
+        var layer_page_layero;
+        function showselect() {
+            layer_page_tree = layer.open({
+                type: 2,
+                title: "编辑节点",
+                area: ["400px", '600px'],
+                content: "/admin/tree?ckey=Http_AdminMenu",
+                success: function (layero, index) {
+                    layer_page_index = index;
+                    //layer_page_layero = layero;
+                }
+            });
+        }
+
+        function afterselected(data) {
+            layer.close(layer_page_tree);
+            if (data.id == 0) {
+                $(layer_page_layero).find("input[name='PARENTID']").val(0);
+                $(layer_page_layero).find("input[name='PARENTNAME']").val("根节点");
+            } else {
+                $(layer_page_layero).find("input[name='PARENTID']").val(data.data.ID);
+                $(layer_page_layero).find("input[name='PARENTNAME']").val(data.data.EXPLAIN);
+            }
+        }
+
+</script>
+}

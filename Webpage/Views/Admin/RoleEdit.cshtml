@@ -1,0 +1,56 @@
+﻿@model BaseBLL.PT_ROLE
+@using Cx.Data;
+
+@{
+    ViewData["Title"] = "角色编辑";
+}
+
+<div class="layui-fluid">
+    <div class="layui-card ">
+        <div class="layui-card-body layui-form" id="form1">
+            <div class="layui-form-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">唯一码</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="NAME" autocomplete="off" placeholder="请输入名称" class="layui-input" value="@Model?.NAME">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">说明</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="EXPLAIN" autocomplete="off" placeholder="请输入说明" class="layui-input" value="@Model?.EXPLAIN">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">级别</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="LEVEL" autocomplete="off" placeholder="请输入级别" class="layui-input" value="@Model?.LEVEL">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <input type="hidden" id="ID" value="@Model?.ID.ToInt32(0)" />
+                        <button type="button" class="layui-btn layui-btn-normal" id="btn_sub">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+<script>
+    $(function(){
+        var editfrom1=new EditForm({
+          container:"#form1",
+          btn1:"#btn_sub",
+          url:"@Url.Action("RoleSave","Admin")"
+
+        });
+        layui.use('form', function () {
+            var form = layui.form
+        });
+    })
+
+</script>
+}

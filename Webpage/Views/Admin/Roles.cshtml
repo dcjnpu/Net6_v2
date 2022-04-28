@@ -1,0 +1,80 @@
+﻿@{
+    Layout = "_Layout";
+}
+@section Js{
+<script src="@Url.Content("/js/LayTable.js")" asp-append-version="true"></script>
+}
+<div class="layui-fluid layui-form">
+    <div class="layui-col-md12">
+        <div class="layui-card ">
+            <div class="layui-card-header">
+                <div class="layui-form-item" id="searchForm">
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input type="text" id="key" class="layui-input" placeholder="搜索关键字" />
+                        </div>
+                        <div class="layui-input-inline">
+                            <div class="layui-btn-container">
+                                <button type="button" class="layui-btn layui-btn-normal" id="btn_search">查询</button>
+                                <button type="button" class="layui-btn layui-btn-normal" onclick="LyHtml('/admin/RoleEdit','新增角色信息','450px','400px')">新 增</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card-body">
+                <table class="layui-table" id="test" lay-filter="demo"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/html" id="barDemo">
+    @*<a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>*@
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="viewpower">查看权限</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script type="text/javascript">
+    var LayTableHelper1=new LayTableHelper({
+        elem:"#test",//#table1
+        id:"_laytable1",
+        url:"/Admin/RolesGet",
+        page:true,//默认true,
+        layfilter:"demo",//f_table
+        searchbtn:"#btn_search",//#btn_search
+        searchform:"#searchForm",//#searchForm
+        cols:[[
+              {field:'ID', width:80, title: 'ID', sort: true}
+              ,{field:'NAME', width:180, title: '唯一名'}
+              ,{field:'EXPLAIN', width:280, title: '说明'}
+              ,{field:'LEVEL', width:280, title: '级别'}
+              ,{field:'CTIME',width:180, title: '创建时间'}
+              ,{width:180, title: '操作',toolbar:"#barDemo"}
+            ]],
+        fun_tool:function(obj){
+            var data = obj.data;
+            if(obj.event === 'detail'){
+                layer.msg('ID：'+ data.ID + ' 的查看操作');
+            } else if(obj.event === 'del'){
+                XConfirm({
+                title:"删除确认",
+                content:"确认删除【"+data.EXPLAIN+"】",
+                yes:function(){
+                    AjaxPost_Async("/Admin/RoleDel",data,function(rdata){
+                        if(rdata.id>0){
+                            XAlert_S(rdata.msg,function(){location.reload(true);});
+                        }else XAlert_F(rdata.msg);
+                    });
+                } });
+
+            } else if(obj.event === 'edit'){
+                LyHtml("/admin/RoleEdit?id="+data.ID,"编辑角色信息","450px","400px");
+            } else if(obj.event === 'viewpower'){
+                LyHtml("/admin/RolePower?id="+data.ID,"编辑角色权限","450px","400px");
+            }
+        }
+    });
+
+</script>

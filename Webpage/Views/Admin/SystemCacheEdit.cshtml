@@ -1,0 +1,85 @@
+﻿@model BaseBLL.PT_CACHE
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "系统缓存";
+}
+
+<div class="layui-fluid">
+    <div class="layui-card ">
+        <div class="layui-card-body layui-form" id="form1">
+            <div class="layui-form-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">唯一码</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="CKey" autocomplete="off" placeholder="请输入唯一码" class="layui-input" value="@Model?.CKey">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">说明</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="CTitle" autocomplete="off" placeholder="请输入说明" class="layui-input" value="@Model?.CTitle">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">库名</label>
+                    <div class="layui-input-block">
+                        <select asp-items="@ViewBag.DbName" asp-for="Conn"></select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">表名</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="TableName" autocomplete="off" placeholder="请输入表名" class="layui-input" value="@Model?.TableName">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">刷新时间(秒)</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="RefreshSecond" autocomplete="off" placeholder="请输入刷新时间(秒)" class="layui-input" value="@Model?.RefreshSecond">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">hash键</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="ShowKey" autocomplete="off" placeholder="请输入hash键" class="layui-input" value="@Model?.ShowKey">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">hash值</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="ShowValue" autocomplete="off" placeholder="请输入hash值" class="layui-input" value="@Model?.ShowValue">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">数据</label>
+                    <div class="layui-input-block">
+                        <textarea asp-for="JustSql" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <input type="hidden" id="ID" value="@Model?.ID.ToInt32(0)" />
+                        <button type="button" class="layui-btn layui-btn-normal" id="btn_sub">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+<script>
+    $(function(){
+        var editfrom1=new EditForm({
+          container:"#form1",
+          btn1:"#btn_sub",
+          url:"@Url.Action("SystemCacheSave","Admin")"
+
+        });
+        layui.use('form', function () {
+            var form = layui.form
+        });
+    })
+
+</script>
+}

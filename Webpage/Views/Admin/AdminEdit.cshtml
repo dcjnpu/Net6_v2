@@ -1,0 +1,68 @@
+﻿@model BaseBLL.PT_ADMIN
+@using Cx.Data;
+
+@{
+    ViewData["Title"] = "管理员编辑";
+}
+
+<div class="layui-fluid">
+    <div class="layui-card ">
+        <div class="layui-card-body layui-form" id="form1">
+            <div class="layui-form-item">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">登录名</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="UNAME" autocomplete="off" placeholder="请输入名称" class="layui-input" value="@Model?.UNAME">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">真实姓名</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="REALNAME" autocomplete="off" placeholder="请输入说明" class="layui-input" value="@Model?.REALNAME">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="PWD" autocomplete="off" placeholder="空表示不修改" class="layui-input" >
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">角色</label>
+                    <div class="layui-input-block">
+                        <select asp-items="@ViewBag.SelectRoles" asp-for="ROLEID"></select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">状态</label>
+                    <div class="layui-input-block">
+                        <select asp-items="@ViewBag.UState" asp-for="USTATE"></select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <input type="hidden" id="ID" value="@Model?.ID.ToInt32(0)" />
+                        <button type="button" class="layui-btn layui-btn-normal" id="btn_sub">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+<script>
+    $(function(){
+        var editfrom1=new EditForm({
+          container:"#form1",
+          btn1:"#btn_sub",
+          url:"@Url.Action("AdminSave","Admin")"
+
+        });
+        layui.use('form', function () {
+            var form = layui.form
+        });
+    })
+
+</script>
+}

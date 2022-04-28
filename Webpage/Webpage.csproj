@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+
+
+  <ItemGroup>
+    <ProjectReference Include="..\BaseBLL\BaseBLL.csproj" />
+    <ProjectReference Include="..\Cx.Data\Cx.Data.csproj" />
+    <ProjectReference Include="..\Cx.EPPlus\Cx.EPPlus.csproj" />
+    <ProjectReference Include="..\Cx.Mongo\Cx.Mongo.csproj" />
+    <ProjectReference Include="..\Cx.Redis\Cx.Redis.csproj" />
+    <ProjectReference Include="..\Cx.Sql\Cx.Sql.csproj" />
+    <ProjectReference Include="..\CxJwt\Cx.Jwt.csproj" />
+  </ItemGroup>
+
+</Project>

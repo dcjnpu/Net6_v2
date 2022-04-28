@@ -1,0 +1,176 @@
+﻿@model BaseBLL.PT_ADMIN
+@{
+    Layout = null;
+    ViewData["Title"] = "Home Page";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CxGitee_Net6</title>
+    <link rel="stylesheet" href="~/layui/css/layui.css" />
+    <link rel="stylesheet" href="~/css/myadmin.css" />
+    <link rel="stylesheet" href="~/css/admin.css" />
+
+    <script src="@Url.Content("~/lib/jquery/dist/jquery.js")"></script>
+        <script src="@Url.Content("~/layui/layui.js")"></script>
+    <script src="@Url.Content("~/lib/index.js")"></script>
+
+    <script src="@Url.Content("~/layer/layer.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/js/XCommon6.js")" asp-append-version="true"></script>
+    <script src="@Url.Content("~/js/EditFrom.js")" asp-append-version="true"></script>
+
+</head>
+<body class="layui-layout-body">
+    <div id="LAY_app">
+
+        <div class="layui-layout layui-layout-admin">
+            <div class="layui-header">
+                <!-- 头部区域 -->
+                <ul class="layui-nav layui-layout-left">
+                    <li class="layui-nav-item layadmin-flexible" lay-unselect>
+                        <a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+                            <i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
+                        </a>
+                    </li>
+
+                    <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                        <a href="http://www.layui.com/admin/" target="_blank" title="前台">
+                            <i class="layui-icon layui-icon-website"></i>
+                        </a>
+                    </li>
+                    <li class="layui-nav-item" lay-unselect>
+                        <a href="javascript:;" layadmin-event="refresh" title="刷新">
+                            <i class="layui-icon layui-icon-refresh-3"></i>
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+
+                    <li class="layui-nav-item" lay-unselect style="display: none">
+                        <a lay-href="app/message/index.html" layadmin-event="message" lay-text="消息中心">
+                            <i class="layui-icon layui-icon-notice"></i>
+
+                            <!-- 如果有新消息，则显示小圆点 -->
+                            <span class="layui-badge-dot"></span>
+                        </a>
+                    </li>
+                    <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                        <a href="javascript:;" layadmin-event="theme">
+                            <i class="layui-icon layui-icon-theme"></i>
+                        </a>
+                    </li>
+                    <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                        <a href="javascript:;" layadmin-event="note">
+                            <i class="layui-icon layui-icon-note"></i>
+                        </a>
+                    </li>
+                    <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                        <a href="javascript:;" layadmin-event="fullscreen">
+                            <i class="layui-icon layui-icon-screen-full"></i>
+                        </a>
+                    </li>
+                    <li class="layui-nav-item" lay-unselect>
+                        <a href="javascript:;">
+                            <cite>@Model.REALNAME</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd style="display: none"><a lay-href="set/user/info.html">基本资料</a></dd>
+                            <dd><a lay-href="/admin/mypassword">修改密码</a></dd>
+                            <hr>
+                            <dd onclick="loginout()" style="text-align: center; cursor: pointer"><a>退出</a></dd>
+                        </dl>
+                    </li>
+
+                    <li class="layui-nav-item layui-hide-xs" lay-unselect>
+                        <a href="javascript:;" layadmin-event=""><i class="layui-icon layui-icon-more-vertical"></i></a>
+                    </li>
+                    <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-unselect>
+                        <a href="javascript:;" layadmin-event="more"><i class="layui-icon layui-icon-more-vertical"></i></a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 侧边菜单 -->
+            <div class="layui-side layui-side-menu">
+                <div class="layui-side-scroll">
+                    <div class="layui-logo" lay-href="/student/studentadd.aspx">
+                        <span>DX后台管理系统</span>
+                    </div>
+
+                    <ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
+                        @Html.Raw(ViewBag.Menu)
+
+                        @* <li data-name="TOP_SYSTEM" class="layui-nav-item">
+                            <a href="javascript:;" lay-tips="系统" lay-direction="2">
+                            <i class="layui-icon layui-icon-util"></i><cite>系统</cite><span class="layui-nav-more"></span>
+                            </a>
+                            <dl class="layui-nav-child">
+                            <dd data-name="LEFT_SYSSETTING">
+                            <a href="javascript:;">配置<span class="layui-nav-more"></span></a>
+                            <dl class="layui-nav-child">
+                            <dd data-name="LIST_MENU"><a lay-href="/admin/adminmenu.aspx">后台菜单</a></dd>
+                            <dd data-name="LIST_ADMINROLE"><a lay-href="/admin/adminrole.aspx">角色</a></dd>
+                            <dd data-name="LIST_SYSCACHE"><a lay-href="/admin/systemcache.aspx">系统缓存</a></dd>
+                            <dd data-name="LIST_SITEINFO"><a lay-href="/admin/siteinfo.aspx">站点信息</a></dd>
+                            </dl>
+                            </dd>
+                            </dl>
+                            </li>
+                            <li data-name="TOP_WEB" class="layui-nav-item"><a href="javascript:;" lay-tips="系统配置" lay-direction="2"><i class="layui-icon layui-icon-set"></i><cite>系统配置</cite><span class="layui-nav-more"></span></a><dl class="layui-nav-child"><dd data-name="LEFT_ADMIN"><a href="javascript:;">管理员<span class="layui-nav-more"></span></a><dl class="layui-nav-child"><dd data-name="LIST_ADMIN"><a lay-href="/admin/adminlist.aspx">列表</a></dd><dd data-name="LIST_ADMINLOG"><a lay-href="/admin/adminlog.aspx">操作日志</a></dd></dl></dd><dd data-name="SETTING_AREA"><a lay-href="/setting/areas.aspx">地区配置</a></dd><dd data-name="SETTING_COMPANY"><a lay-href="/setting/companys.aspx">公司配置</a></dd><dd data-name="SETTING_STATION"><a lay-href="/setting/stations.aspx">气站配置</a></dd><dd data-name="SETTING_FACTORY"><a lay-href="/appendsetting/SingleSet.aspx?ckey=Http_Factory">气瓶生产单位</a></dd></dl></li>
+                        *@
+                        <span class="layui-nav-bar" style="top: 28px; height: 0px; opacity: 0;"></span>
+                    </ul>
+
+                </div>
+            </div>
+
+            <!-- 页面标签 -->
+            <div class="layadmin-pagetabs" id="LAY_app_tabs">
+                <div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+                <div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+                <div class="layui-icon layadmin-tabs-control layui-icon-down">
+                    <ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+                        <li class="layui-nav-item" lay-unselect>
+                            <a href="javascript:;"></a>
+                            <dl class="layui-nav-child layui-anim-fadein">
+                                <dd layadmin-event="closeThisTabs"><a href="javascript:;">关闭当前标签页</a></dd>
+                                <dd layadmin-event="closeOtherTabs"><a href="javascript:;">关闭其它标签页</a></dd>
+                                <dd layadmin-event="closeAllTabs"><a href="javascript:;">关闭全部标签页</a></dd>
+                            </dl>
+                        </li>
+                    </ul>
+                </div>
+                <div class="layui-tab" lay-unauto lay-allowclose="true" lay-filter="layadmin-layout-tabs">
+                    <ul class="layui-tab-title" id="LAY_app_tabsheader">
+                        <li lay-id="/student/studentadd.aspx" lay-attr="/student/studentadd.aspx" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 主体内容 -->
+            <div class="layui-body" id="LAY_app_body">
+                <div class="layadmin-tabsbody-item layui-show">
+                    <iframe src="" frameborder="0" class="layadmin-iframe"></iframe>
+                </div>
+            </div>
+
+            <!-- 辅助元素，一般用于移动设备下遮罩 -->
+            <div class="layadmin-body-shade" layadmin-event="shade"></div>
+        </div>
+    </div>
+
+    <script>
+
+
+        function loginout() {
+            AjaxPost_Sync("/home/loginout", { }, function (rdata) {
+                location.href = "/home/login";
+            });
+        }
+    </script>
+</body>
+</html>
